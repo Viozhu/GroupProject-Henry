@@ -8,7 +8,7 @@ const passport = require('./auth/setup');
 
 const corsOptions = {
   credentials: true,
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONT_URL || 'http://localhost:3000',
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
@@ -18,6 +18,12 @@ const { MONGO_URI } = process.env;
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 // logging middleware
 app.use(logger('dev'));
 
